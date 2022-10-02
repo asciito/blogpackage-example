@@ -74,6 +74,13 @@ class BlogPackageServiceProvider extends ServiceProvider
         ], 'view-components');
     }
 
+    protected function registerAssets()
+    {
+        $this->publishes([
+            __DIR__ . '/../resources/assets' => public_path('blogpackage'),
+        ], 'assets');
+    }
+
     protected function registerRoutes()
     {
         Route::group($this->routeConfiguration(), function() {
