@@ -1,0 +1,41 @@
+{
+    "name": "asciito/blogpackage",
+    "description": "A demo package",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ayax Córdova",
+            "email": "ayax.cordova@aydev.mx"
+        }
+    ],
+    "scripts": {
+        "test": "vendor/bin/phpunit --testdox",
+        "test-f": "vendor/bin/phpunit --testdox --filter"
+    },
+    "autoload": {
+        "psr-4": {
+            "asciito\\BlogPackage\\": "src",
+            "asciito\\BlogPackage\\Database\\Factories\\": "database/factories"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "asciito\\BlogPackage\\Tests\\": "tests"
+        }
+    },
+    "require-dev": {
+        "orchestra/testbench": "^7.7",
+        "phpunit/phpunit": "^9.5"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "asciito\\BlogPackage\\BlogPackageServiceProvider"
+            ],
+            "aliases": {
+                "Calculator": "asciito\\BlogPackage\\Facades\\Calculator"
+            }
+        }
+    }
+}
