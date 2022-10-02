@@ -64,14 +64,10 @@ class BlogPackageServiceProvider extends ServiceProvider
 
     protected function registerViews()
     {
-        $this->publishes([
-            __DIR__ . '/../resources/views/posts' => resource_path('views/vendor/blogpackage'),
-        ], 'views');
-
-        $this->publishes([
-            __DIR__ . '/../src/View/Components' => app_path('View/Components'),
-            __DIR__ . '/../resources/views/components' => resource_path('views/components'),
-        ], 'view-components');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'blogpackage');
+        $this->loadViewComponentsAs('blogpackage', [
+            Alert::class,
+        ]);
     }
 
     protected function registerAssets()

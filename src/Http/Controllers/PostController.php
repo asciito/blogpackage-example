@@ -10,14 +10,14 @@ class PostController extends Controller
     {
         $posts = Post::all();
 
-        return view('blogpackage::post.index', compact('posts'));
+        return view('blogpackage::posts.index', compact('posts'));
     }
 
     public function show()
     {
          $post = Post::findOrFail(request('post'));
 
-         return view('blogpackage::post.show', compact('post'));
+         return view('blogpackage::posts.show', compact('post'));
     }
 
     public function store()
