@@ -2,11 +2,13 @@
 
 namespace asciito\BlogPackage\Tests\Feature;
 
+use asciito\BlogPackage\Listeners\UpdatePostTitle;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use asciito\BlogPackage\Tests\TestCase;
 use asciito\BlogPackage\Models\Post;
 use asciito\BlogPackage\Tests\User;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Support\Facades\Event;
+use asciito\BlogPackage\Events\PostWasCreated;
 
 class CreatePostTest extends TestCase
 {
@@ -15,6 +17,8 @@ class CreatePostTest extends TestCase
     /** @test */
     public function authenticated_users_can_create_a_post()
     {
+        Event::fake();
+
         // Making sure there's no post already
         $this->assertCount(0, Post::all());
 
@@ -95,5 +99,56 @@ class CreatePostTest extends TestCase
         $this->get(route('posts.show', $post))
             ->assertSee('The single post title')
             ->assertSee('The single post body');
+    }
+
+    /** @test */
+    public function an_event_is_emitted_whean_a_new_post_is_created()
+    {
+        Event::fake();
+
+        $author = User::factory()->create();
+
+        $this->actingAs($author)->post(route('posts.store'), [
+           'title' => 'A valid title',
+           'body' => 'A valid body',
+        ]);
+
+        $post = Post::first();
+
+        Event::assertDispatched(PostWasCreated::class, function($event) use ($post) {
+            return $event->post->id === $post->id;
+        });
+    }
+
+
+    /** @test */
+    public function a_newly_created_posts_title_will_be_changed()
+    {
+        $post = Post::factory()->create([
+            'title' => 'Initial title',
+        ]);
+
+        $this->assertEquals('Initial title', $post->title);
+
+        (new UpdatePostTitle())->handle(
+            new PostWasCreated($post)
+        );
+
+        $this->assertEquals('New: Initial title', $post->title);
+    }
+
+    /** @test */
+    public function the_title_of_a_post_is_updated_whenever_a_post_is_created()
+    {
+        $author = User::factory()->create();
+
+        $this->actingAs($author)->post(route('posts.store'), [
+            'title' => 'A valid title',
+            'body' => 'A valid body',
+        ]);
+
+        $post = Post::first();
+
+        $this->assertEquals('New: A valid title', $post->title);
     }
 }

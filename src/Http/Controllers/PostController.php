@@ -2,6 +2,7 @@
 
 namespace asciito\BlogPackage\Http\Controllers;
 
+use asciito\BlogPackage\Events\PostWasCreated;
 use asciito\BlogPackage\Models\Post;
 
 class PostController extends Controller
@@ -37,6 +38,8 @@ class PostController extends Controller
             'title' => request('title'),
             'body' => request('body'),
         ]);
+
+        event(new PostWasCreated($post));
 
         return redirect(route('posts.show', $post));
     }

@@ -4,12 +4,11 @@ namespace asciito\BlogPackage\Tests;
 
 use asciito\BlogPackage\BlogPackageServiceProvider;
 
-abstract class TestCase extends \Orchestra\Testbench\TestCase
+class TestCase extends \Orchestra\Testbench\TestCase
 {
     public function setUp(): void
     {
         parent::setUp();
-        // additional setup
     }
 
     protected function getPackageProviders($app)
@@ -19,6 +18,9 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
     protected function getEnvironmentSetUp($app)
     {
         // perform environment setup

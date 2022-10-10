@@ -2,6 +2,7 @@
 
 namespace asciito\BlogPackage;
 
+use asciito\BlogPackage\Providers\EventServiceProvider;
 use asciito\BlogPackage\View\Components\Alert;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,8 @@ class BlogPackageServiceProvider extends ServiceProvider
         $this->app->bind('calculator', function(Application $app) {
             return new Calculator;
         });
+
+        $this->app->register(EventServiceProvider::class);
 
         // $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'blogpackage');
 
